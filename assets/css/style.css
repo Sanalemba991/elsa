@@ -1089,6 +1089,10 @@ textarea {
   transition: all .4s ease 0s;
   background-color: #c97d4d;
 }
+.tom{
+  border-radius: 20px;
+
+}
 
 .main-menu > nav > ul > li:hover > a {
   color: #c97d4d;
