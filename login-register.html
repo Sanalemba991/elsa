@@ -225,14 +225,69 @@
                                 <div id="lg2" class="tab-pane">
                                     <div class="login-form-container">
                                         <div class="login-register-form">
-                                            <form action="#" method="post">
-                                                <input type="text" name="user-name" placeholder="Username">
-                                                <input type="password" name="user-password" placeholder="Password">
-                                                <input name="user-email" placeholder="Email" type="email">
+                                            <form id="registerForm">
+                                                <input type="text" name="user-name" id="user-name" placeholder="Username" required>
+                                                <input type="password" name="user-password" id="user-password" placeholder="Password" required>
+                                                <input name="user-email" id="user-email" placeholder="Email" type="email" required>
+                                                <input type="text" name="user-phone" id="user-phone" placeholder="Phone (Optional)">
+                                                
                                                 <div class="button-box btn-hover">
                                                     <button type="submit">Register</button>
                                                 </div>
                                             </form>
+                                        
+                                            <script>
+                                                document.getElementById('registerForm').addEventListener('submit', async function(event) {
+                                                    event.preventDefault(); // Prevent form from reloading the page
+                                        
+                                                    // Get values from the form inputs
+                                                    const name = document.getElementById('user-name').value.trim();
+                                                    const password = document.getElementById('user-password').value.trim();
+                                                    const email = document.getElementById('user-email').value.trim();
+                                                    const phone = document.getElementById('user-phone').value.trim(); // Optional field
+                                        
+                                                    // Client-side validation for required fields
+                                                    if (!name || !password || !email) {
+                                                        alert("Please fill out all required fields.");
+                                                        return;
+                                                    }
+                                        
+                                                    // Prepare the data to send to the server
+                                                    const userData = {
+                                                        name,
+                                                        email,
+                                                        password,
+                                                        phone: phone || null, // If phone is empty, send null
+                                                    };
+                                        
+                                                    try {
+                                                        // Make a POST request to the server with the form data
+                                                        const response = await fetch('http://localhost:4000/signup', {
+                                                            method: 'POST',
+                                                            headers: {
+                                                                'Content-Type': 'application/json',
+                                                            },
+                                                            body: JSON.stringify(userData),
+                                                        });
+                                        
+                                                        const data = await response.json();
+                                        
+                                                        if (response.ok) {
+                                                            if (data.otpSent) {
+                                                                alert("Registration successful. OTP sent to your phone.");
+                                                            } else {
+                                                                alert("Registration successful, but OTP was not sent.");
+                                                            }
+                                                        } else {
+                                                            alert(data.error || "Something went wrong. Please try again.");
+                                                        }
+                                                    } catch (error) {
+                                                        console.error("Error during registration:", error);
+                                                        alert("An error occurred. Please try again later.");
+                                                    }
+                                                });
+                                            </script>
+                                            
                                         </div>
                                     </div>
                                 </div>
