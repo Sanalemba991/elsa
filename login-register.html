@@ -10,16 +10,16 @@
     <link rel="profile" href="https://gmpg.org/xfn/11" />
     <link rel="canonical" href="" />
 
-    <!-- Open Graph (OG) meta tags are snippets of code that control how URLs are displayed when shared on social media  -->
+
     <meta property="og:locale" content="en_US" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Elsa Design Co." />
     <meta property="og:url" content="" />
     <meta property="og:site_name" content="Elsa Design Co." />
-    <!-- For the og:image content, replace the # with a link of an image -->
+
     <meta property="og:image" content="#" />
     <meta property="og:description" content="Elsa Design Co." />
-    <!-- Add site Favicon -->
+
     <link rel="icon" href="assets/images/img/favicon edc.png" sizes="32x32" />
     <link rel="icon" href="assets/images/img/favicon edc.png" sizes="192x192" />
     <link rel="apple-touch-icon" href="assets/images/img/favicon edc.png" />
@@ -28,8 +28,6 @@
       content="assets/images/favicon/cropped-favicon-270x270.png"
     />
 
-    <!-- All CSS is here
-	============================================ -->
     <link rel="stylesheet" href="assets/css/vendor/bootstrap.min.css" />
     <link rel="stylesheet" href="assets/css/vendor/pe-icon-7-stroke.css" />
     <link rel="stylesheet" href="assets/css/vendor/themify-icons.css" />
@@ -255,78 +253,26 @@
                   <div id="lg1" class="tab-pane active">
                     <div class="login-form-container">
                       <div class="login-register-form">
-                        <form id="login-form" action="#" method="post">
-                            <input
-                              type="email"
-                              name="user-email"
-                              id="user-email"
-                              placeholder="Email"
-                              required
-                            />
-                            <input
-                              type="password"
-                              name="user-password"
-                              id="user-password"
-                              placeholder="Password"
-                              required
-                            />
-                            <div class="login-toggle-btn">
-                              <input type="checkbox" id="remember-me" />
-                              <label for="remember-me">Remember me</label>
-                              <a href="/forgot-password">Forgot Password?</a> <!-- Corrected the link -->
-                            </div>
-                            <div class="button-box btn-hover">
-                              <button type="submit">Login</button>
-                            </div>
-                          </form>
-                          
-                          <!-- Add this JavaScript to handle form submission -->
-                          <script>
-                            document.getElementById('login-form').addEventListener('submit', async (e) => {
-                              e.preventDefault();  // Prevent default form submission
-                          
-                              const email = document.getElementById('user-email').value;
-                              const password = document.getElementById('user-password').value;
-                          
-                              // Prepare the data to send
-                              const data = {
-                                email,
-                                password
-                              };
-                          
-                              try {
-                                const response = await fetch('/login', {
-                                  method: 'POST',
-                                  headers: {
-                                    'Content-Type': 'application/json'
-                                  },
-                                  body: JSON.stringify(data)
-                                });
-                          
-                                // Check if the response status is OK (200)
-                                if (!response.ok) {
-                                  // If the response is not OK, handle the error
-                                  const result = await response.json();
-                                  alert(result.message || 'Login failed! Please check your credentials and try again.');
-                                  return;
-                                }
-                          
-                                // If login is successful
-                                const result = await response.json();
-                                alert('Login successful!');
-                                console.log('JWT Token:', result.token); // Store or use the token securely (e.g., in localStorage)
-                          
-                                // Optionally, redirect to another page
-                                // window.location.href = '/dashboard'; // Example redirection after successful login
-                          
-                              } catch (error) {
-                                console.error('Error:', error);
-                                alert('An error occurred. Please try again.');
-                              }
-                            });
-                          </script>
-                          
-                          
+                        <form action="#" method="post">
+                          <input
+                            type="text"
+                            name="user-name"
+                            placeholder="Username"
+                          />
+                          <input
+                            type="password"
+                            name="user-password"
+                            placeholder="Password"
+                          />
+                          <div class="login-toggle-btn">
+                            <input type="checkbox" />
+                            <label>Remember me</label>
+                            <a href="#">Forgot Password?</a>
+                          </div>
+                          <div class="button-box btn-hover">
+                            <button type="submit">Login</button>
+                          </div>
+                        </form>
                       </div>
                     </div>
                   </div>
