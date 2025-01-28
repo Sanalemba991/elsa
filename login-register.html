@@ -252,6 +252,7 @@
                   <div id="lg1" class="tab-pane active">
                     <div class="login-form-container">
                       <div class="login-register-form">
+                        <!-- Login Form -->
                         <form id="loginForm">
                           <input
                             type="text"
@@ -267,52 +268,104 @@
                             placeholder="Password"
                             required
                           />
+                        
+                          <!-- OTP Input (Always visible) -->
+                          <div id="otp-container">
+                            <input
+                              type="text"
+                              id="otp"
+                              placeholder="Enter OTP"
+                              required
+                            />
+                          </div>
+                        
                           <div class="login-toggle-btn">
                             <input type="checkbox" id="rememberMe" />
                             <label for="rememberMe">Remember me</label>
                             <a href="#">Forgot Password?</a>
                           </div>
+                        
                           <div class="button-box btn-hover">
                             <button type="submit">Login</button>
                           </div>
                         </form>
                         
+
                         <script>
                           document
                             .getElementById("loginForm")
                             .addEventListener("submit", async (e) => {
                               e.preventDefault();
-                        
-                              const email = document.getElementById("email").value;
-                              const password = document.getElementById("password").value;
-                        
-                              const response = await fetch("http://localhost:4000/login", {
-                                method: "POST",
-                                headers: {
-                                  "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify({ email, password }),
-                              });
-                        
+
+                              const email =
+                                document.getElementById("email").value;
+                              const password =
+                                document.getElementById("password").value;
+                              const otpField = document.getElementById("otp");
+
+                              // If OTP is required, make it required in the form dynamically
+                              if (
+                                document.getElementById("otp-container").style
+                                  .display === "block"
+                              ) {
+                                otpField.setAttribute("required", "true");
+                              } else {
+                                otpField.removeAttribute("required");
+                              }
+
+                              const otp = otpField ? otpField.value : null;
+
+                              // Create request body with email, password, and OTP (if available)
+                              let requestBody = { email, password };
+
+                              // Add OTP if provided
+                              if (otp) {
+                                requestBody.otp = otp;
+                              }
+
+                              // First login request (with or without OTP)
+                              const response = await fetch(
+                                "http://localhost:4000/login",
+                                {
+                                  method: "POST",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                  },
+                                  body: JSON.stringify(requestBody),
+                                }
+                              );
+
                               const data = await response.json();
-                        
+
                               if (response.ok) {
                                 console.log("Login successful: ", data);
-                        
-                                // Assuming the response contains the JWT token:
+
+                                // Assuming the response contains the JWT token
                                 const jwtToken = data.token; // Adjust according to your response format
-                        
-                                // Store the JWT token in localStorage (or sessionStorage, based on your preference)
+
+                                // Store the JWT token in localStorage
                                 localStorage.setItem("jwtToken", jwtToken);
-                        
+
                                 // Redirect to the protected route (index.html)
                                 window.location.href = "index.html"; // Ensure this page is protected
                               } else {
-                                console.error("Login failed: ", data.message);
+                                if (data.otpRequired) {
+                                  // Show OTP input field if the server response indicates OTP is required
+                                  document.getElementById(
+                                    "otp-container"
+                                  ).style.display = "block";
+                                  alert(
+                                    "Please enter the OTP sent to your phone."
+                                  );
+                                } else {
+                                  console.error("Login failed: ", data.message);
+                                  alert(
+                                    "Login failed. Please check your credentials."
+                                  );
+                                }
                               }
                             });
                         </script>
-                        
                       </div>
                     </div>
                   </div>
@@ -353,59 +406,83 @@
                           </div>
                         </form>
 
-                       
-<script>
-  document
-    .getElementById("registerForm")
-    .addEventListener("submit", async function (event) {
-      event.preventDefault();
+                        <script>
+                          document
+                            .getElementById("registerForm")
+                            .addEventListener("submit", async function (event) {
+                              event.preventDefault();
 
-      const name = document.getElementById("user-name").value.trim();
-      const password = document.getElementById("user-password").value.trim();
-      const email = document.getElementById("user-email").value.trim();
-      const phone = document.getElementById("user-phone").value.trim();
+                              const name = document
+                                .getElementById("user-name")
+                                .value.trim();
+                              const password = document
+                                .getElementById("user-password")
+                                .value.trim();
+                              const email = document
+                                .getElementById("user-email")
+                                .value.trim();
+                              const phone = document
+                                .getElementById("user-phone")
+                                .value.trim();
 
-      if (!name || !password || !email) {
-        alert("Please fill out all required fields.");
-        return;
-      }
+                              if (!name || !password || !email) {
+                                alert("Please fill out all required fields.");
+                                return;
+                              }
 
-      const userData = {
-        name,
-        email,
-        password,
-        phone: phone || null,
-      };
+                              const userData = {
+                                name,
+                                email,
+                                password,
+                                phone: phone || null,
+                              };
 
-      try {
-        const response = await fetch("http://localhost:4000/signup", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userData),
-        });
+                              try {
+                                const response = await fetch(
+                                  "http://localhost:4000/signup",
+                                  {
+                                    method: "POST",
+                                    headers: {
+                                      "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify(userData),
+                                  }
+                                );
 
-        const data = await response.json();
+                                const data = await response.json();
 
-        if (response.ok) {
-          if (data.otpSent) {
-            alert("Registration successful. OTP sent to your phone.");
-          } else {
-            alert("Registration successful, but OTP was not sent.");
-          }
+                                if (response.ok) {
+                                  if (data.otpSent) {
+                                    alert(
+                                      "Registration successful. OTP sent to your phone."
+                                    );
+                                  } else {
+                                    alert(
+                                      "Registration successful, but OTP was not sent."
+                                    );
+                                  }
 
-          // Automatically switch to the login tab with id="lg1"
-          document.querySelector('a[href="#lg1"]').click();
-        } else {
-          alert(data.error || "Something went wrong. Please try again.");
-        }
-      } catch (error) {
-        console.error("Error during registration:", error);
-        alert("An error occurred. Please try again later.");
-      }
-    });
-</script>
+                                  // Automatically switch to the login tab with id="lg1"
+                                  document
+                                    .querySelector('a[href="#lg1"]')
+                                    .click();
+                                } else {
+                                  alert(
+                                    data.error ||
+                                      "Something went wrong. Please try again."
+                                  );
+                                }
+                              } catch (error) {
+                                console.error(
+                                  "Error during registration:",
+                                  error
+                                );
+                                alert(
+                                  "An error occurred. Please try again later."
+                                );
+                              }
+                            });
+                        </script>
                       </div>
                     </div>
                   </div>
