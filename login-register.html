@@ -253,6 +253,7 @@
                     <div class="login-form-container">
                       <div class="login-register-form">
                         <!-- Login Form -->
+                        <!-- Login Form -->
                         <form id="loginForm">
                           <input
                             type="text"
@@ -268,28 +269,17 @@
                             placeholder="Password"
                             required
                           />
-                        
-                          <!-- OTP Input (Always visible) -->
-                          <div id="otp-container">
-                            <input
-                              type="text"
-                              id="otp"
-                              placeholder="Enter OTP"
-                              required
-                            />
-                          </div>
-                        
+
                           <div class="login-toggle-btn">
                             <input type="checkbox" id="rememberMe" />
                             <label for="rememberMe">Remember me</label>
                             <a href="#">Forgot Password?</a>
                           </div>
-                        
+
                           <div class="button-box btn-hover">
                             <button type="submit">Login</button>
                           </div>
                         </form>
-                        
 
                         <script>
                           document
@@ -301,29 +291,11 @@
                                 document.getElementById("email").value;
                               const password =
                                 document.getElementById("password").value;
-                              const otpField = document.getElementById("otp");
 
-                              // If OTP is required, make it required in the form dynamically
-                              if (
-                                document.getElementById("otp-container").style
-                                  .display === "block"
-                              ) {
-                                otpField.setAttribute("required", "true");
-                              } else {
-                                otpField.removeAttribute("required");
-                              }
+                             
+                              const requestBody = { email, password };
 
-                              const otp = otpField ? otpField.value : null;
-
-                              // Create request body with email, password, and OTP (if available)
-                              let requestBody = { email, password };
-
-                              // Add OTP if provided
-                              if (otp) {
-                                requestBody.otp = otp;
-                              }
-
-                              // First login request (with or without OTP)
+                          
                               const response = await fetch(
                                 "http://localhost:4000/login",
                                 {
@@ -340,29 +312,18 @@
                               if (response.ok) {
                                 console.log("Login successful: ", data);
 
-                                // Assuming the response contains the JWT token
-                                const jwtToken = data.token; // Adjust according to your response format
+                                
+                                const jwtToken = data.token;
 
-                                // Store the JWT token in localStorage
                                 localStorage.setItem("jwtToken", jwtToken);
 
-                                // Redirect to the protected route (index.html)
+                              
                                 window.location.href = "index.html"; // Ensure this page is protected
                               } else {
-                                if (data.otpRequired) {
-                                  // Show OTP input field if the server response indicates OTP is required
-                                  document.getElementById(
-                                    "otp-container"
-                                  ).style.display = "block";
-                                  alert(
-                                    "Please enter the OTP sent to your phone."
-                                  );
-                                } else {
-                                  console.error("Login failed: ", data.message);
-                                  alert(
-                                    "Login failed. Please check your credentials."
-                                  );
-                                }
+                                console.error("Login failed: ", data.message);
+                                alert(
+                                  "Login failed. Please check your credentials."
+                                );
                               }
                             });
                         </script>
