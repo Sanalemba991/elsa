@@ -364,7 +364,7 @@
                             .getElementById("registerForm")
                             .addEventListener("submit", async function (event) {
                               event.preventDefault();
-
+                      
                               const name = document
                                 .getElementById("user-name")
                                 .value.trim();
@@ -377,62 +377,47 @@
                               const phone = document
                                 .getElementById("user-phone")
                                 .value.trim();
-
+                      
                               if (!name || !password || !email) {
                                 alert("Please fill out all required fields.");
                                 return;
                               }
-
+                      
                               const userData = {
                                 name,
                                 email,
                                 password,
                                 phone: phone || null,
                               };
-
+                      
                               try {
-                                const response = await fetch(
-                                  "http://localhost:4000/signup",
-                                  {
-                                    method: "POST",
-                                    headers: {
-                                      "Content-Type": "application/json",
-                                    },
-                                    body: JSON.stringify(userData),
-                                  }
-                                );
-
+                                const response = await fetch("http://localhost:4000/signup", {
+                                  method: "POST",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                  },
+                                  body: JSON.stringify(userData),
+                                });
+                      
                                 const data = await response.json();
-
+                      
                                 if (response.ok) {
                                   if (data.otpSent) {
-                                    alert(
-                                      "Registration successful. OTP sent to your phone."
-                                    );
+                                    alert("Registration successful. OTP sent to your phone.");
                                   } else {
-                                    alert(
-                                      "Registration successful, but OTP was not sent."
-                                    );
+                                    alert("Registration successful, but OTP was not sent.");
                                   }
-
-                                  // Automatically switch to the login tab
+                      
+                              
                                   document
-                                    .querySelector('a[href="#login"]')
-                                    .click(); // Simulates tab change
+                                    .querySelector('a[href="#lg1"]')
+                                    .click(); 
                                 } else {
-                                  alert(
-                                    data.error ||
-                                      "Something went wrong. Please try again."
-                                  );
+                                  alert(data.error || "Something went wrong. Please try again.");
                                 }
                               } catch (error) {
-                                console.error(
-                                  "Error during registration:",
-                                  error
-                                );
-                                alert(
-                                  "An error occurred. Please try again later."
-                                );
+                                console.error("Error during registration:", error);
+                                alert("An error occurred. Please try again later.");
                               }
                             });
                         </script>
