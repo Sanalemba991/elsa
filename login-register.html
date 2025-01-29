@@ -252,8 +252,6 @@
                   <div id="lg1" class="tab-pane active">
                     <div class="login-form-container">
                       <div class="login-register-form">
-                        <!-- Login Form -->
-                        <!-- Login Form -->
                         <form id="loginForm">
                           <input
                             type="text"
@@ -292,10 +290,8 @@
                               const password =
                                 document.getElementById("password").value;
 
-                             
                               const requestBody = { email, password };
 
-                          
                               const response = await fetch(
                                 "http://localhost:4000/login",
                                 {
@@ -312,13 +308,11 @@
                               if (response.ok) {
                                 console.log("Login successful: ", data);
 
-                                
                                 const jwtToken = data.token;
 
                                 localStorage.setItem("jwtToken", jwtToken);
 
-                              
-                                window.location.href = "index.html"; // Ensure this page is protected
+                                window.location.href = "index.html";
                               } else {
                                 console.error("Login failed: ", data.message);
                                 alert(
@@ -423,7 +417,6 @@
                                     );
                                   }
 
-                                  // Automatically switch to the login tab with id="lg1"
                                   document
                                     .querySelector('a[href="#lg1"]')
                                     .click();
